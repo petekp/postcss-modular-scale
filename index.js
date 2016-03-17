@@ -51,14 +51,21 @@ module.exports = postcss.plugin('postcss-modular-scale', function (opts) {
         ms = new ModularScale({ ratios: ratios, bases: bases });
 
         declarations.forEach(function (decl) {
-            var number = parseValue(decl.value);
-            var unit = parseUnit(decl.value);
-            var newValue = ms(number) + unit;
+            var props = decl.value.split(' ');
+
+            props.forEach(function(prop, i, arr) {
+              if (prop.indexOf('ms(') == 0) {
+                var number = parseValue(prop);
+                var unit = parseUnit(prop);
+                arr[i] = ms(number) + unit;
+              }
+            });
+
             result.messages.push(
                 'Modular scale for ' + decl.value + ' is ' + newValue
             );
 
-            decl.value = ms(number) + unit;
+            decl.value = props.join(' ');
         });
     };
 });
