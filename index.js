@@ -52,12 +52,14 @@ module.exports = postcss.plugin('postcss-modular-scale', function (opts) {
 
         declarations.forEach(function (decl) {
             var props = decl.value.split(' ');
+            var newValue = '';
 
             props.forEach(function(prop, i, arr) {
               if (prop.indexOf('ms(') == 0) {
                 var number = parseValue(prop);
                 var unit = parseUnit(prop);
-                arr[i] = ms(number) + unit;
+                newValue = ms(number) + unit
+                arr[i] = newValue;
               }
             });
 
